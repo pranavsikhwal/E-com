@@ -10,3 +10,10 @@ class Product(Base):
     price       = Column(Float, nullable=False)
     image_url   = Column(String, nullable=True)
     stock       = Column(Integer, default=0)
+    
+class User(Base):
+    __tablename__ = "users"
+
+    id              = Column(Integer, primary_key=True, index=True)
+    email           = Column(String, unique=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
