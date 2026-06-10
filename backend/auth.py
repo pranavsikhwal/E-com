@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")  #bcrypt is a passwordv hashing algo and this knows how to hash password basically this is a pssword hasher . 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")  #bcrypt is a password hashing algo and this knows how to hash password basically this is a pssword hasher . 
 
 def hash_password(password):
     return pwd_context.hash(password)
