@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float,ForeignKey
 from database import Base
+from sqlalchemy.orm import relationship
 
 class Product(Base):
     __tablename__ = "products"  #actual table name in database 
@@ -17,3 +18,14 @@ class User(Base):
     id              = Column(Integer, primary_key=True, index=True)
     email           = Column(String, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    
+class CartItem(Base):
+    __tablename__ = "cart_items"
+
+    id         = Column(Integer, primary_key=True, index=True)
+    user_id    = Column(Integer, ForeignKey("users.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    quantity   = Column(Integer, default=1)
+    
+    product    = relationship("Product")
+    # when you load a CartItem, also automatically load the related Product

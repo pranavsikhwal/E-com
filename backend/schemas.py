@@ -21,3 +21,20 @@ class UserCreate(BaseModel):
 class LoginOut(BaseModel):
     access_token: str
     token_type:   str   #Token type is always "bearer" — it's a standard convention that tells the frontend how to use the token.
+    
+class CartItemOut(BaseModel):
+    id:         int
+    quantity:   int
+    product:    ProductOut
+# when the cart endpoint returns data, it returns the full product details nested inside each cart item
+    class Config:
+        from_attributes = True
+        # Add this when schema reads data FROM the database (SQLAlchemy objects)
+#→ Don't add this when schema reads data from user input (JSON from frontend
+#Why? → SQLAlchemy gives objects, Pydantic expects dictionaries
+       #from_attributes = True lets Pydantic read object attributes too
+       
+       
+class CartAddRequest(BaseModel):
+    product_id: int
+    quantity:   int = 1
