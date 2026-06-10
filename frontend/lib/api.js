@@ -51,3 +51,49 @@ export async function loginUser(email, password) {
 
   return res.json();
 }
+export async function getCart() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/cart/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch cart");
+  }
+
+  return res.json();
+}
+export async function addToCart(productId, quantity = 1) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/cart/add`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ product_id: productId, quantity }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to add to cart");
+  }
+
+  return res.json();
+}
+
+export async function removeFromCart(itemId) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/cart/${itemId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to remove from cart");
+  }
+
+  return res.json();
+}
