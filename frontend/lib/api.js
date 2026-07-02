@@ -1,7 +1,10 @@
 const BASE_URL = "http://localhost:8000";
 
-export async function getProducts() {
-  const res = await fetch(`${BASE_URL}/products/`, {
+export async function getProducts(search = "") {
+  const url = search
+    ? `${BASE_URL}/products/?search=${search}`
+    : `${BASE_URL}/products/`;
+  const res = await fetch(url, {
     cache: "no-store",
   });
 
