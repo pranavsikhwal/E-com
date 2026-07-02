@@ -12,7 +12,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://e-com-iye7.vercel.app"
+        "https://e-com-iye7.vercel.app",
+        "https://e-com-pranav19.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
