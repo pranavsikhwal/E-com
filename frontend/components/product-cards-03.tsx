@@ -3,7 +3,16 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export default function ProductCard({ product }) {
+type Product = {
+  id: number;
+  name: string;
+  description: string | null;
+  price: number;
+  image_url: string | null;
+  stock: number;
+};
+
+export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="group">
       <figure className="relative aspect-square w-full overflow-hidden rounded-md">
