@@ -59,3 +59,11 @@ class OrderOut(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class PaginatedResponse(BaseModel):
+    products:    list[ProductOut]
+    total:       int
+    page:        int
+    limit:       int
+    total_pages: int  
+    #No Config needed here — this schema doesn't read from database objects directly. It's built manually in the endpoint.

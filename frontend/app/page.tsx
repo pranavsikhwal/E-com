@@ -4,35 +4,35 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/components/product-cards-03";
 import { getProducts } from "@/lib/api";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
-type Product = {
-  id: number;
-  name: string;
-  description: string | null;
-  price: number;
-  image_url: string | null;
-  stock: number;
-};
-
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const delay = setTimeout(() => {
-      fetchProducts();
+      fetchProducts(1);
+      setPage(1);
     }, 400);
 
     return () => clearTimeout(delay);
   }, [search]);
 
-  async function fetchProducts() {
+  useEffect(() => {
+    fetchProducts(page);
+  }, [page]);
+
+  async function fetchProducts(pageNum) {
     setLoading(true);
     try {
-      const data = await getProducts(search);
-      setProducts(data);
+      const data = await getProducts(search, pageNum);
+      setProducts(data.products);
+      setTotalPages(data.total_pages);
     } catch (err) {
       console.error("Failed to fetch products", err);
     } finally {
@@ -40,8 +40,15 @@ export default function HomePage() {
     }
   }
 
+  function handlePageChange(newPage) {
+    if (newPage < 1 || newPage > totalPages) return;
+    setPage(newPage);
+    window.scrollTo(0, 0);
+  }
+
   return (
     <div>
+      {/* Search bar */}
       <div className="flex flex-col items-center mb-10 mt-4">
         <div className="relative w-full max-w-xl">
           <Search
@@ -58,6 +65,7 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Products */}
       {loading && (
         <p className="text-center text-muted-foreground">Loading products...</p>
       )}
@@ -73,6 +81,37 @@ export default function HomePage() {
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!loading && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-10">
+          <Button
+            variant="outline"
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1} //cannt go before page 1
+          >
+            ← Previous
+          </Button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+            <Button
+              key={num}
+              variant={page === num ? "default" : "outline"}
+              onClick={() => handlePageChange(num)}
+            >
+              {num}
+            </Button>
+          ))}
+
+          <Button
+            variant="outline"
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages}
+          >
+            Next →
+          </Button>
         </div>
       )}
     </div>

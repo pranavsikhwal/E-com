@@ -1,9 +1,11 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export async function getProducts(search = "") {
-  const url = search
-    ? `${BASE_URL}/products/?search=${search}`
-    : `${BASE_URL}/products/`;
+export async function getProducts(search = "", page = 1) {
+  let url = `${BASE_URL}/products/?page=${page}&limit=6`;
+
+  if (search) {
+    url += `&search=${search}`;
+  }
   const res = await fetch(url, {
     cache: "no-store",
   });
