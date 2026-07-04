@@ -27,7 +27,7 @@ export default function HomePage() {
     fetchProducts(page);
   }, [page]);
 
-  async function fetchProducts(pageNum) {
+  async function fetchProducts(pageNum: number) {
     setLoading(true);
     try {
       const data = await getProducts(search, pageNum);
@@ -40,7 +40,7 @@ export default function HomePage() {
     }
   }
 
-  function handlePageChange(newPage) {
+  function handlePageChange(newPage: number) {
     if (newPage < 1 || newPage > totalPages) return;
     setPage(newPage);
     window.scrollTo(0, 0);
