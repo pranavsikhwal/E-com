@@ -23,7 +23,7 @@ export default function LoginPage() {
       if (isLogin) {
         const data = await loginUser(email, password);
         localStorage.setItem("token", data.access_token);
-        router.push("/");
+        window.location.href = "/";
       } else {
         await registerUser(email, password);
         setIsLogin(true);
