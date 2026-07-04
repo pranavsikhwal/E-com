@@ -49,7 +49,7 @@ export default function Navbar() {
           color: "#111",
         }}
       >
-        MyShop
+        Bazaar
       </Link>
 
       <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
