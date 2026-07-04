@@ -113,3 +113,34 @@ export async function sendChatMessage(message, history) {
 
   return res.json();
 }
+export async function placeOrder() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/orders/place`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to place order");
+  }
+
+  return res.json();
+}
+
+export async function getMyOrders() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${BASE_URL}/orders/my`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch orders");
+  }
+
+  return res.json();
+}

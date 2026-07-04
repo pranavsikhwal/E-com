@@ -1,6 +1,6 @@
  #model and schema should always match on field names:
 from pydantic import BaseModel
-
+from datetime import datetime
 class ProductOut(BaseModel):
     id:          int
     name:        str
@@ -38,3 +38,24 @@ class CartItemOut(BaseModel):
 class CartAddRequest(BaseModel):
     product_id: int
     quantity:   int = 1
+    
+    
+class OrderItemOut(BaseModel):
+    id:        int
+    quantity:  int
+    price:     float
+    product:   ProductOut
+
+    class Config:
+        from_attributes = True
+
+
+class OrderOut(BaseModel):
+    id:         int
+    total:      float
+    status:     str
+    created_at: datetime
+    items:      list[OrderItemOut]
+
+    class Config:
+        from_attributes = True

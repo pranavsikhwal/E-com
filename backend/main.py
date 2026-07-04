@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
 from routers import products
-from routers import auth,cart,ai
+from routers import auth,cart,ai,order
 Base.metadata.create_all(bind=engine)   #it will create the table if not exist and check everytime wenever we run this 
 
 app = FastAPI()   #it creates backend app
@@ -24,3 +24,4 @@ app.include_router(products.router)
 app.include_router(auth.router)
 app.include_router(cart.router)
 app.include_router(ai.router)
+app.include_router(order.router)

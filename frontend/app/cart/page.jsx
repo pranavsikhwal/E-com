@@ -3,37 +3,36 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getCart, removeFromCart } from "@/lib/api";
+import { getCart, removeFromCart, placeOrder } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 
 export default function CartPage() {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ordering, setOrdering] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    //runs only once  when the page loads
     const token = localStorage.getItem("token");
-
     if (!token) {
       router.push("/login");
       return;
     }
-
-    async function fetchCart() {
-      try {
-        const data = await getCart();
-        setItems(data);
-      } catch (err) {
-        setError("Failed to load cart. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchCart();
   }, []);
+
+  async function fetchCart() {
+    try {
+      const data = await getCart();
+      setItems(data);
+    } catch (err) {
+      setError("Failed to load cart.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleRemove(itemId) {
     try {
@@ -44,20 +43,53 @@ export default function CartPage() {
     }
   }
 
-  const total = items.reduce((sum, item) => {
-    return sum + item.product.price * item.quantity;
-  }, 0); // 0 is the initial sum
+  async function handlePlaceOrder() {
+    const confirmed = window.confirm(
+      "Are you sure you want to place this order?",
+    );
+    if (!confirmed) return;
 
-  if (loading) {
-    return <p>Loading your cart...</p>;
+    setOrdering(true);
+    setError("");
+
+    try {
+      await placeOrder();
+      setItems([]);
+      setOrderSuccess(true);
+    } catch (err) {
+      setError("Failed to place order. Please try again.");
+    } finally {
+      setOrdering(false);
+    }
   }
 
-  if (error) {
-    return <p className="text-red-500">{error}</p>;
+  const total = items.reduce((sum, item) => {
+    return sum + item.product.price * item.quantity;
+  }, 0);
+
+  if (loading) return <p>Loading your cart...</p>;
+
+  if (orderSuccess) {
+    return (
+      <div className="max-w-2xl mx-auto text-center mt-20">
+        <h1 className="text-3xl font-bold mb-4">
+          🎉 Order Placed Successfully!
+        </h1>
+        <p className="text-muted-foreground mb-8">
+          Thank you for your order. We'll process it shortly.
+        </p>
+        <Button onClick={() => router.push("/")}>Continue Shopping</Button>
+      </div>
+    );
   }
 
   if (items.length === 0) {
-    return <p>Your cart is empty.</p>;
+    return (
+      <div className="max-w-2xl mx-auto text-center mt-20">
+        <p className="text-muted-foreground mb-4">Your cart is empty.</p>
+        <Button onClick={() => router.push("/")}>Browse Products</Button>
+      </div>
+    );
   }
 
   return (
@@ -96,9 +128,21 @@ export default function CartPage() {
         ))}
       </div>
 
-      <div className="mt-6 border-t pt-4 flex justify-between items-center">
-        <p className="text-lg font-semibold">Total</p>
-        <p className="text-lg font-bold">₹{total.toFixed(2)}</p>
+      <div className="mt-6 border-t pt-4">
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-lg font-semibold">Total</p>
+          <p className="text-lg font-bold">₹{total.toFixed(2)}</p>
+        </div>
+
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+        <Button
+          className="w-full"
+          onClick={handlePlaceOrder}
+          disabled={ordering}
+        >
+          {ordering ? "Placing Order..." : "Place Order"}
+        </Button>
       </div>
     </div>
   );
