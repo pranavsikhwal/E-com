@@ -31,7 +31,7 @@ products = [
         name="Casual Hoodie",
         description="Warm and comfortable hoodie for cold days",
         price=799,
-        image_url="https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400",
+        image_url="https://images.unsplash.com/photo-1509942774463-acf339cf87d5?w=400",
         stock=25
     ),
     Product(
