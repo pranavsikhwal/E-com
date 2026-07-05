@@ -14,7 +14,7 @@ A full stack ecommerce web application built with Next.js and FastAPI, featuring
 
 ### Product Detail
 
-![Product Detail](screenshots/product_detals.png)
+![Product Detail](screenshots/product_details.png)
 
 ### Cart
 
